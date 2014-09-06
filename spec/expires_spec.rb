@@ -30,29 +30,8 @@ describe Expires do
         expect(expires["b"]).to eq 'b'
       end
     end
-
-    describe "when hotload is false" do
-      expires = Expires.new(namespace: "on_initialize_when_hotload_is_false")
-      expires["a"] = :a
-      expires["b"] = :b
-      expires.disconnect
-
-      expires = Expires.new(namespace: "on_initialize_when_hotload_is_false", hotload: false)
-      it "have to loaded 'a' as nil" do
-        expect(expires["a"]).to eq nil
-      end
-      
-      it "have to loaded 'b' as nil" do
-        expect(expires["b"]).to eq nil
-      end
-    end
   end
 
-  context "when not connected" do
-  end
-
-  context "when connected" do
-  end
 
 
 
