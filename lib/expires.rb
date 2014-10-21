@@ -72,6 +72,7 @@ class Expires
           @key = values[1]
           @value = values[2]
           flash(@key) 
+          @self = self
           eval values[0].gsub("$n","\n")
         rescue =>e
           STDERR.puts e
@@ -204,7 +205,7 @@ class Expires
 
     source = Expires.get_source_str(procedure.source).gsub(/\n/,"$n")
     if get key
-      sql = updates key, {:on_expire=>source.to_s, :remind=>JSON.generate(remind)}
+      sql = updates key, {:on_expire=>source.to_s, :remind=>JSON.generate(remind||{})}
     else
       #procedure.call
       return
