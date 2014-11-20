@@ -136,9 +136,12 @@ class Expires
   end
 
   def forget key
-    raise "Remind your value as Hash." unless hash.is_a?(Hash)
-    update key, :remind, "{}" if get key
-    @remind[key.to_sym] = {}
+    ret = get key
+    @@db.execute(sql = "delete from #{@namespace} where key = #{key.to_s.inspect};")
+    return ret 
+    # raise "Remind your value as Hash." unless hash.is_a?(Hash)
+    # update key, :remind, "{}" if get key
+    # @remind[key.to_sym] = {}
   end
 
   def flash key
