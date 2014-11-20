@@ -125,6 +125,15 @@ class Expires
   def []=(key,value)
     set(key,value)
   end
+  
+  def any?
+    size > 0 ? true : false
+  end
+
+  def size
+    kill_expired()
+    @@db.execute("select count(1) from #{@namespace} limit 1;").first.first
+  end
 
   def clean
     @@db.execute("delete from #{@namespace};")
@@ -159,6 +168,20 @@ class Expires
   def select key, *columns
     kill_expired unless @killing
     return @body[key.to_sym] = @@db.execute("select #{columns.join(", ")} from #{@namespace} where key = '#{key}' limit 1;").first
+  end
+
+  def all *columns
+    kill_expired unless @killing
+    Hash.new.tap do |this|
+      @@db.execute("select key, value #{columns.empty? ? "" : ","}#{columns.join(", ")} from #{@namespace};").each do |record|
+        value = record[1]
+        begin
+          value = JSON.parse value
+        rescue
+        end
+        this[record[0]] = value
+      end
+    end
   end
 
   def get key
