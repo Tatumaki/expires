@@ -117,7 +117,7 @@ class Expires
     value = JSON[value] unless value.is_a?(String)
 
     @@db.execute(sql="insert or replace into #{@namespace} (key,value,created_at,updated_at,expire)"+
-                 " values ('#{key}','#{value}','#{created_at}','#{updated_at}','#{expire}';")
+                 " values ('#{key}','#{value}','#{created_at}','#{updated_at}','#{expire}');")
     @@io.puts sql
     #TODO: syncedで状態管理
   end
